@@ -2,12 +2,8 @@
   model.js
 
   This file is required. It must export a class with at least one public function called `getData`
-
-  Documentation: https://koopjs.github.io/docs/usage/provider
 */
 
-const _ = require('lodash')
-const fetch = require('node-fetch')
 
 function Model (koop) {}
 
