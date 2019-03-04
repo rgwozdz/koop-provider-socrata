@@ -43,10 +43,14 @@ Model.prototype.getData = async function (req, callback) {
 }
 
 /**
- * Use the request params to construct the remote URL
- * @param {} req 
+ * Use the request params to construct the remote Socrata URL
+ * @param {object} req Express request object
  */
 function makeUrl (req) {
+  // req.params.host and req.params.id are Koop route parameters
+  // e.g., /provider/:host/:id/FeatureServer/0/query
+
+  // Form and return the Socrata URL
   return `https://${req.params.host}/resource/${req.params.id}`
 }
 
@@ -60,10 +64,10 @@ function translate(json) {
   const features = json.map(rec => {
     const feature = {}
 
-    // Create GeoJSON properties
+    // Create GeoJSON "properties"
     feature.properties = _.omit(rec, 'location_1')
   
-    // Create GeoJSON geometry
+    // Create GeoJSON "geometry"
     feature.geometry = rec.location_1
 
     return feature
