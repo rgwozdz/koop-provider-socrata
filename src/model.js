@@ -30,13 +30,14 @@ Model.prototype.getData = async function (req, callback) {
     // 3. Translate the result to GeoJSON
     const geojson = translate(json)
 
-    // 4. Fire the callback with the GeoJSON
+    // 4. Create Metadata
     geojson.metadata = {}
     geojson.metadata.geometryType = 'Point'
 
+    // 5. Fire callback
     callback(null, geojson)
   } catch (err) {
-    // 5. Handle any errors
+    // 6. Handle any errors
     callback(err, null)
   }
 }
