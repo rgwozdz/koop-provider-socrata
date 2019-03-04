@@ -21,10 +21,11 @@ Model.prototype.getData = function (req, callback) {
   
   // 3. Translate the result to GeoJSON
 
-  // 4. Fire the callback with the GeoJSON
+  // 4. Add metadata to GeoJSON
   
-  // 5. Handle any errors
+  // 5. Fire the callback with the GeoJSON
   
+  // 6. Handle any errors
 }
 
 module.exports = Model
