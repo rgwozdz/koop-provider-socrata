@@ -68,11 +68,7 @@ function translate(json) {
     feature.type = 'Feature'
 
     // Create GeoJSON "properties"
-    feature.properties = {}
-    Object.keys(rec).forEach(key => {
-      if (key === 'location_1' || key.includes(':@computed_region')) return
-      feature.properties[key] = rec[key]
-    })
+    feature.properties = _.omit(rec, 'location_1')
   
     // Create GeoJSON "geometry"
     feature.geometry = rec.location_1
