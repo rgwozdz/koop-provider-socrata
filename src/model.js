@@ -57,15 +57,22 @@ function makeUrl (req) {
 
 /**
  * Translate remote API json to GeoJSON
- * @param {*} json 
+ * @param {object[]} json 
  */
 function translate(json) {
   // Loop thru JSON array
   const features = json.map(rec => {
     const feature = {}
 
+    // Add GeoJSON type
+    feature.type = 'Feature'
+
     // Create GeoJSON "properties"
-    feature.properties = _.omit(rec, 'location_1')
+    feature.properties = {}
+    Object.keys(rec).forEach(key => {
+      if (key === 'location_1' || key.includes(':@computed_region')) return
+      feature.properties[key] = rec[key]
+    })
   
     // Create GeoJSON "geometry"
     feature.geometry = rec.location_1
