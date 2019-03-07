@@ -12,7 +12,9 @@
     "config": "^3.0.0",
     "koop": ">=3",
     "lodash": "^4.17.11",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "node-sql-parser": "^1.1.0",
+    "query-string": "^6.3.0"
   },
   "author": "",
   "license": "MIT",

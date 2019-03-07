@@ -8,6 +8,9 @@
 
 const _ = require('lodash')
 const fetch = require('node-fetch')
+const { Parser } = require('node-sql-parser');
+const parser = new Parser()
+const queryString = require('query-string')
 
 function Model (koop) {}
 
@@ -19,8 +22,14 @@ function Model (koop) {}
  */
 Model.prototype.getData = async function (req, callback) {
 
-  // 1. Construct the remote API request URL
-  const url = `https://${req.params.host}/resource/${req.params.id}`
+  // 1a. Construct the remote API request URL
+  const baseUrl = `https://${req.params.host}/resource/${req.params.id}`
+  
+  // 1b. Parse the where parameter
+  const queryStringFilters = makeFilters(req.query.where)
+
+  // 1c. Append the url
+  const url = `${baseUrl}?${queryStringFilters}`
 
   try {
     // 2. Make the request to the remote API
@@ -69,6 +78,28 @@ function translate(json) {
     type: 'FeatureCollection',
     features
   }
+}
+
+function makeFilters(where) {
+  if (!where) return ''
+  const ast = parser.astify(`SELECT * FROM t WHERE ${where}`)
+  const queryFilters = astFlattener(ast.where)
+  return queryString.stringify(queryFilters)
+}
+
+function astFlattener (node) {
+  if (node.operator === 'OR') return []
+  if (node.operator === 'AND') { 
+      const left = astFlattener(node.left)
+      const right = astFlattener(node.right)
+      return Object.assign({}, left, right)
+  }
+  if (node.operator === '=') {
+      let key = node.left.column ? node.left.column : node.right.column 
+      let val = node.right.value ? node.right.value : node.left.value
+      return { [key]: val }
+  }
+  return {}
 }
 
 module.exports = Model
